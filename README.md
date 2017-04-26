@@ -66,3 +66,14 @@ We convert Set5 test set images to mat format using Matlab, for best PSNR perfor
   - LapSRN x8
   - Code for data generation 
   - LapGAN
+  
+### Citation
+
+If you find the code and datasets useful in your research, please cite:
+    
+    @inproceedings{LapSRN,
+        author    = {Lai, Wei-Sheng and Huang, Jia-Bin and Ahuja, Narendra and Yang, Ming-Hsuan}, 
+        title     = {Deep Laplacian Pyramid Networks for Fast and Accurate Super-Resolution}, 
+        booktitle = {IEEE Conferene on Computer Vision and Pattern Recognition},
+        year      = {2017}
+    }
