@@ -52,8 +52,8 @@ We convert Set5 test set images to mat format using Matlab, for best PSNR perfor
   - We use hdf5 format training samples with 'data', 'label_x2', and 'label_x4' keys, the training data is generated with Matlab Bicubic Interplotation, please refer [Code for Data Generation](https://github.com/twtygqyy/pytorch-vdsr/tree/master/data) for creating training files.
 
 ### Performance
-  - We provide a pretrained LapSRN x4 model trained on T91 and BSDS200 images from [SR_training_datasets] (http://vllab1.ucmerced.edu/~wlai24/LapSRN/results/SR_training_datasets.zip) with data augmentation as mentioned in the paper
-  - No bias is used in this implementation, and another difference from paper is that Adam with 1e-4 learning is applied instead of SGD
+  - We provide a pretrained LapSRN x4 model trained on T91 and BSDS200 images from [SR_training_datasets](http://vllab1.ucmerced.edu/~wlai24/LapSRN/results/SR_training_datasets.zip) with data augmentation as mentioned in the paper
+  - No bias is used in this implementation, and another difference from paper is that Adam optimizer with 1e-4 learning is applied instead of SGD
   - Performance in PSNR on Set5, Set14, and BSD100
   
 | DataSet/Method        | LapSRN Paper          | LapSRN PyTorch|
@@ -65,3 +65,4 @@ We convert Set5 test set images to mat format using Matlab, for best PSNR perfor
 ### ToDos
   - LapSRN x8
   - Code for data generation 
+  - LapGAN
