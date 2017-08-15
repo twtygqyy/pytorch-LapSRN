@@ -58,7 +58,7 @@ We convert Set5 test set images to mat format using Matlab, for best PSNR perfor
   
 | DataSet/Method        | LapSRN Paper          | LapSRN PyTorch|
 | ------------- |:-------------:| -----:|
-| Set5      | 37.54      | **37.65** |
+| Set5      | 31.54      | **31.65** |
 | Set14     | 28.19      | **28.27** |
 | BSD100    | 27.32      | **27.36** |
 
