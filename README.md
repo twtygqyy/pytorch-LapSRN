@@ -32,6 +32,10 @@ optional arguments:
                         path to pretrained model (default: none)
 
 ```
+An example of training usage is shown as follows:
+```
+python main.py --cuda
+```
 
 ### Evaluation
 ```
@@ -46,10 +50,6 @@ optional arguments:
   --model MODEL      model path
   --dataset DATASET  dataset name, Default: Set5
   --scale SCALE      scale factor, Default: 4
-```
-An example of training usage is shown as follows:
-```
-python eval.py --cuda
 ```
 
 ### Demo
