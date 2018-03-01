@@ -41,10 +41,10 @@ for image_name in image_list:
     im_gt_y = sio.loadmat(image_name)['im_gt_y']
     im_b_y = sio.loadmat(image_name)['im_b_y']
     im_l_y = sio.loadmat(image_name)['im_l_y']
-               
+
     im_gt_y = im_gt_y.astype(float)
     im_b_y = im_b_y.astype(float)
-    im_l_y = im_l_y.astype(float)        
+    im_l_y = im_l_y.astype(float)
 
     psnr_bicubic = PSNR(im_gt_y, im_b_y,shave_border=opt.scale)
     avg_psnr_bicubic += psnr_bicubic
@@ -58,7 +58,7 @@ for image_name in image_list:
         im_input = im_input.cuda()
     else:
         model = model.cpu()
-        
+
     start_time = time.time()
     HR_2x, HR_4x = model(im_input)
     elapsed_time = time.time() - start_time
@@ -70,7 +70,7 @@ for image_name in image_list:
 
     im_h_y = im_h_y*255.
     im_h_y[im_h_y<0] = 0
-    im_h_y[im_h_y>255.] = 255.            
+    im_h_y[im_h_y>255.] = 255.
     im_h_y = im_h_y[0,:,:]
 
     psnr_predicted = PSNR(im_gt_y, im_h_y,shave_border=opt.scale)

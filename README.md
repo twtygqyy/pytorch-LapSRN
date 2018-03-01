@@ -34,7 +34,7 @@ optional arguments:
 ```
 An example of training usage is shown as follows:
 ```
-python main.py --cuda
+python main_lapsrn.py --cuda
 ```
 
 ### Evaluation

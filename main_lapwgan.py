@@ -9,7 +9,6 @@ from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from lapsrn_wgan import _netG, _netD, L1_Charbonnier_loss
 from dataset import DatasetFromHdf5
-os.environ["CUDA_VISIBLE_DEVICES"]="2"
 from torchvision import models, transforms
 import torch.utils.model_zoo as model_zoo
 
@@ -34,7 +33,7 @@ def main():
 
     global opt, model 
     opt = parser.parse_args()
-    print opt
+    print(opt)
 
     cuda = opt.cuda
     if cuda and not torch.cuda.is_available():
@@ -47,17 +46,17 @@ def main():
         torch.cuda.manual_seed(opt.seed)
 
     cudnn.benchmark = True
-        
+
     print("===> Loading datasets")
     train_set = DatasetFromHdf5("data/lap_pry_x4_small.h5")
     training_data_loader = DataLoader(dataset=train_set, num_workers=opt.threads, batch_size=opt.batchSize, shuffle=True)
 
     print('===> Building generator model')
     netG = _netG()
-    
+
     print('===> Building discriminator model')    
     netD = _netD()
-    
+
     print('===> Loading VGG model') 
     model_urls = {
         "vgg19": "https://download.pytorch.org/models/vgg19-dcbb9e9d.pth"
@@ -65,7 +64,7 @@ def main():
 
     netVGG = models.vgg19()
     netVGG.load_state_dict(model_zoo.load_url(model_urls['vgg19']))
-    
+
     weight = torch.FloatTensor(64,1,3,3)
     parameters = list(netVGG.parameters())
     for i in range(64):
@@ -78,18 +77,18 @@ def main():
             self.conv = conv2d = nn.Conv2d(1, 64, kernel_size=3, padding=1)
             self.feature = nn.Sequential(*list(netVGG.features.children())[1:-1])
             self._initialize_weights()
-            
+
         def forward(self, x):
             out = self.conv(x)
             out = self.feature(out)
             return out
-    
+
         def _initialize_weights(self):
             self.conv.weight.data.copy_(weight)
             self.conv.bias.data.copy_(bias)
-        
+
     netContent = _content_model()
-    
+
     print('===> Building Loss')
     criterion = L1_Charbonnier_loss()
 
@@ -109,7 +108,7 @@ def main():
             netG.load_state_dict(checkpoint["model"].state_dict())
         else:
             print("=> no checkpoint found at '{}'".format(opt.resume))
-            
+
     # optionally copy weights from a checkpoint
     if opt.pretrained:
         if os.path.isfile(opt.pretrained):
@@ -127,33 +126,21 @@ def main():
     for epoch in range(opt.start_epoch, opt.nEpochs + 1): 
         train(training_data_loader, optimizerG, optimizerD, netG, netD, netContent, criterion, epoch)
         save_checkpoint(netG, epoch)
-    
+
 def adjust_learning_rate(optimizer, epoch):
     """Sets the learning rate to the initial LR decayed by 10 every 10 epochs"""
     lr = opt.lr * (0.1 ** (epoch // opt.step))
     return lr
 
 def train(training_data_loader, optimizerG, optimizerD, netG, netD, netContent, criterion, epoch):
-    
+
     netG.train()
     netD.train()
-    
+
     one = torch.FloatTensor([1.])
     mone = one * -1
     content_weight = torch.FloatTensor([1.])
     adversarial_weight = torch.FloatTensor([1.])
-    
-    
-    normalize = transforms.Normalize(
-       mean=[0.485, 0.456, 0.406],
-       std=[0.229, 0.224, 0.225]
-    )
-    preprocess = transforms.Compose([
-       transforms.Resize(256),
-       transforms.CenterCrop(224),
-       transforms.ToTensor(),
-       normalize
-    ])
 
     for iteration, batch in enumerate(training_data_loader, 1):
 
@@ -168,7 +155,7 @@ def train(training_data_loader, optimizerG, optimizerD, netG, netD, netContent, 
         ############################
         # (1) Update D network: loss = D(x)) - D(G(z))
         ###########################
-       
+
         # train with real
         errD_real = netD(label_x4)
         errD_real.backward(one, retain_graph=True)
@@ -178,15 +165,15 @@ def train(training_data_loader, optimizerG, optimizerD, netG, netD, netContent, 
         fake_x4 = Variable(netG(input_G)[1].data)
         fake_D = fake_x4
         errD_fake = netD(fake_D)
-        
+
         errD_fake.backward(mone)
 
         errD = errD_real - errD_fake
         optimizerD.step()
-        
+
         for p in netD.parameters(): # reset requires_grad
             p.data.clamp_(opt.clamp_lower, opt.clamp_upper)
-            
+
         netD.zero_grad()
         netG.zero_grad()
         netContent.zero_grad()
@@ -207,30 +194,30 @@ def train(training_data_loader, optimizerG, optimizerD, netG, netD, netContent, 
         content_real_x4 = Variable(content_real_x4.data)       
         content_loss_x4 = criterion(content_fake_x4, content_real_x4)
         content_loss_x4.backward(content_weight, retain_graph=True)
-        
+
         content_loss = content_loss_x2 + content_loss_x4
-        
+
         adversarial_loss = netD(fake_D_x4)
         adversarial_loss.backward(adversarial_weight)
 
         optimizerG.step()
-            
+
         netD.zero_grad()
         netG.zero_grad()
-        netContent.zero_grad()        
+        netContent.zero_grad()
         if iteration%10 == 0:
             print("===> Epoch[{}]({}/{}): LossD: {:.10f} [{:.10f} - {:.10f}] LossG: [{:.10f} + {:.10f}]".format(epoch, iteration, len(training_data_loader), 
                   errD.data[0], errD_real.data[0], errD_fake.data[0], adversarial_loss.data[0], content_loss.data[0]))   
 
 def save_checkpoint(model, epoch):
-    model_folder = "model/"
-    model_out_path = model_folder + "model_epoch_{}.pth".format(epoch)
+    model_folder = "checkpoint/"
+    model_out_path = model_folder + "lapwgan_model_epoch_{}.pth".format(epoch)
     state = {"epoch": epoch ,"model": model}
     if not os.path.exists(model_folder):
         os.makedirs(model_folder)
 
     torch.save(state, model_out_path)
-        
+
     print("Checkpoint saved to {}".format(model_out_path))
 
 if __name__ == "__main__":

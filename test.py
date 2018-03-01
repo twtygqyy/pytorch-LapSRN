@@ -33,10 +33,10 @@ model = torch.load(opt.model)["model"]
 im_gt_y = sio.loadmat("Set5/" + opt.image + ".mat")['im_gt_y']
 im_b_y = sio.loadmat("Set5/" + opt.image + ".mat")['im_b_y']
 im_l_y = sio.loadmat("Set5/" + opt.image + ".mat")['im_l_y']
-           
+
 im_gt_y = im_gt_y.astype(float)
 im_b_y = im_b_y.astype(float)
-im_l_y = im_l_y.astype(float)        
+im_l_y = im_l_y.astype(float)
 
 psnr_bicubic = PSNR(im_gt_y, im_b_y,shave_border=opt.scale)
 
@@ -60,7 +60,7 @@ im_h_y = HR_4x.data[0].numpy().astype(np.float32)
 
 im_h_y = im_h_y*255.
 im_h_y[im_h_y<0] = 0
-im_h_y[im_h_y>255.] = 255.            
+im_h_y[im_h_y>255.] = 255.
 im_h_y = im_h_y[0,:,:]
 
 psnr_predicted = PSNR(im_gt_y, im_h_y,shave_border=opt.scale)

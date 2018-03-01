@@ -25,7 +25,7 @@ parser.add_argument("--pretrained", default="", type=str, help="path to pretrain
 
 def main():
 
-    global opt, model 
+    global opt, model
     opt = parser.parse_args()
     print(opt)
 
@@ -93,8 +93,15 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
     lr = adjust_learning_rate(optimizer, epoch-1)
 
     for param_group in optimizer.param_groups:
+<<<<<<< HEAD:main_lapsrn.py
+        param_group["lr"] = lr
+
+    print("Epoch={}, lr={}".format(epoch, optimizer.param_groups[0]["lr"]))
+
+=======
         param_group["lr"] = lr  
     print "epoch =", epoch,"lr =",optimizer.param_groups[0]["lr"]
+>>>>>>> 3016f47b7272f960fcb53b81a50a36800807dab8:main.py
     model.train()
 
     for iteration, batch in enumerate(training_data_loader, 1):
@@ -124,8 +131,8 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
             print("===> Epoch[{}]({}/{}): Loss: {:.10f}".format(epoch, iteration, len(training_data_loader), loss.data[0]))
 
 def save_checkpoint(model, epoch):
-    model_folder = "model_adam/"
-    model_out_path = model_folder + "model_epoch_{}.pth".format(epoch)
+    model_folder = "checkpoint/"
+    model_out_path = model_folder + "lapsrn_model_epoch_{}.pth".format(epoch)
     state = {"epoch": epoch ,"model": model}
     if not os.path.exists(model_folder):
         os.makedirs(model_folder)

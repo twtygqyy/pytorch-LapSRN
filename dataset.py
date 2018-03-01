@@ -11,8 +11,8 @@ class DatasetFromHdf5(data.Dataset):
         self.label_x2 = hf.get("label_x2")
         self.label_x4 = hf.get("label_x4")
 
-    def __getitem__(self, index):            
+    def __getitem__(self, index):
         return torch.from_numpy(self.data[index,:,:,:]).float(), torch.from_numpy(self.label_x2[index,:,:,:]).float(), torch.from_numpy(self.label_x4[index,:,:,:]).float()
-        
+
     def __len__(self):
         return self.data.shape[0]
