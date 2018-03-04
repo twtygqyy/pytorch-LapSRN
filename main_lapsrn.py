@@ -93,15 +93,10 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
     lr = adjust_learning_rate(optimizer, epoch-1)
 
     for param_group in optimizer.param_groups:
-<<<<<<< HEAD:main_lapsrn.py
         param_group["lr"] = lr
 
     print("Epoch={}, lr={}".format(epoch, optimizer.param_groups[0]["lr"]))
 
-=======
-        param_group["lr"] = lr  
-    print "epoch =", epoch,"lr =",optimizer.param_groups[0]["lr"]
->>>>>>> 3016f47b7272f960fcb53b81a50a36800807dab8:main.py
     model.train()
 
     for iteration, batch in enumerate(training_data_loader, 1):
