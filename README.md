@@ -1,5 +1,5 @@
 # PyTorch LapSRN
-Implementation of CVPR2017 Paper: "Deep Laplacian Pyramid Networks for Fast and Accurate Super-Resolution"(http://vllab1.ucmerced.edu/~wlai24/LapSRN/) in PyTorch
+Implementation of CVPR2017 Paper: "Deep Laplacian Pyramid Networks for Fast and Accurate Super-Resolution"(http://vllab.ucmerced.edu/wlai24/LapSRN/) in PyTorch
 
 ## Usage
 ### Training
@@ -72,7 +72,7 @@ We convert Set5 test set images to mat format using Matlab, for best PSNR perfor
   - We provide a simple hdf5 format training sample in data folder with 'data', 'label_x2', and 'label_x4' keys, the training data is generated with Matlab Bicubic Interplotation, please refer [Code for Data Generation](https://github.com/twtygqyy/pytorch-LapSRN/tree/master/data) for creating training files.
 
 ### Performance
-  - We provide a pretrained LapSRN x4 model trained on T91 and BSDS200 images from [SR_training_datasets](http://vllab1.ucmerced.edu/~wlai24/LapSRN/results/SR_training_datasets.zip) with data augmentation as mentioned in the paper
+  - We provide a pretrained LapSRN x4 model trained on T91 and BSDS200 images from [SR_training_datasets](http://vllab.ucmerced.edu/wlai24/LapSRN/results/SR_testing_datasets.zip) with data augmentation as mentioned in the paper
   - No bias is used in this implementation, and another difference from paper is that Adam optimizer with 1e-4 learning is applied instead of SGD
   - Performance in PSNR on Set5, Set14, and BSD100
   
