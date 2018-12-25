@@ -7,7 +7,7 @@ import torch.optim as optim
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from lapsrn import Net, L1_Charbonnier_loss
-from dataset import DatasetFromHdf5
+from sr_dataset import SRImageDataset
 
 # Training settings
 parser = argparse.ArgumentParser(description="PyTorch LapSRN")
@@ -42,8 +42,10 @@ def main():
     cudnn.benchmark = True
 
     print("===> Loading datasets")
-    train_set = DatasetFromHdf5("data/lap_pry_x4_small.h5")
-    training_data_loader = DataLoader(dataset=train_set, num_workers=opt.threads, batch_size=opt.batchSize, shuffle=True)
+    train_set = SRImageDataset("train/hr", 128, 256, not cuda)
+    # If `shuffle` is enabled, then random access will harm
+    # locality
+    training_data_loader = DataLoader(dataset=train_set, num_workers=opt.threads, batch_size=opt.batchSize, shuffle=False)
 
     print("===> Building model")
     model = Net()
@@ -122,8 +124,8 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
 
         optimizer.step()
 
-        if iteration%100 == 0:
-            print("===> Epoch[{}]({}/{}): Loss: {:.10f}".format(epoch, iteration, len(training_data_loader), loss.data[0]))
+        if iteration%1 == 0:
+            print("===> Epoch[{}]({}/{}): Loss: {:.10f}".format(epoch, iteration, len(training_data_loader), loss.item()))
 
 def save_checkpoint(model, epoch):
     model_folder = "checkpoint/"
